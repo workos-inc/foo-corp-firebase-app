@@ -1,0 +1,22 @@
+{
+  "name": "foo-corp-firebase-app",
+  "version": "1.0.0",
+  "description": "A NodeJS microservice for exchanging tokens between Firebase and WorkOS",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/workos-inc/foo-corp-firebase-app.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/workos-inc/foo-corp-firebase-app/issues"
+  },
+  "homepage": "https://github.com/workos-inc/foo-corp-firebase-app#readme",
+  "dependencies": {
+    "firebase": "^8.2.2"
+  }
+}
