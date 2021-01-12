@@ -1,7 +1,7 @@
-const dotenv = require('dotenv');
-const express = require('express');
-const WorkOS = require('@workos-inc/node').default;
-const admin = require('firebase-admin');
+const dotenv = require("dotenv");
+const express = require("express");
+const WorkOS = require("@workos-inc/node").default;
+const admin = require("firebase-admin");
 
 dotenv.config();
 const app = express();
@@ -12,31 +12,31 @@ const workos = new WorkOS(process.env.WORKOS_API_KEY);
 const clientID = process.env.WORKOS_CLIENT_ID;
 
 //Firebase logic
-admin.initializeApp();
+const firebaseApp = admin.initializeApp();
 
-app.get('/callback', async (req, res) => {
+app.get("/callback", async (req, res) => {
   const { code } = req.query;
 
   const profile = await workos.sso.getProfile({
     code,
     clientID,
-  })
+  });
 
-  admin
-  .auth()
-  .createCustomToken(profile.id)
-  .then((customToken) => {
-    //Send token to client
-    console.log(`${customToken}`);
-  })
-  .catch((error) => {
-    console.log('Error creating custom token: ', error);
-  })
-
-  res.redirect('/');
+  try {
+    const firebaseToken = await firebaseApp
+      .auth()
+      .createCustomToken(profile.id);
+    console.log(firebaseToken);
+    //Send your custom token to your client:
+    //res.send(firebaseToken);
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).send("Error minting token.");
+  }
+  res.redirect("/");
 });
 
-app.get('/auth', (_req, res) => {
+app.get("/auth", (_req, res) => {
   const domain = process.env.DOMAIN;
   const redirectURI = process.env.REDIRECT_URI;
 
@@ -50,6 +50,6 @@ app.get('/auth', (_req, res) => {
 });
 
 // start the Express server
-app.listen( port, () => {
-  console.log( `server started at ${port}` );
-} );
+app.listen(port, () => {
+  console.log(`server started at ${port}`);
+});
