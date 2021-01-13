@@ -15,12 +15,14 @@ const workos = new WorkOS(process.env.WORKOS_API_KEY);
 //const redirectURI = process.env.REDIRECT_URI;
 
 app.get("/auth", (_req, res) => {
-/*const authorizationURL = workos.sso.getAuthorizationURL({
+  /*const authorizationURL = workos.sso.getAuthorizationURL({
     domain,
     projectID,
     redirectURI,
   });*/
-res.redirect(process.env.AUTHORIZATION_URL);
+  /* the following call is to test the output: current return value builds the URL as project_id, domain, redirect_uri, and then response_type=code. response_type=code should be at the beginning of the URL and is not explicitly definable in the old version of the SDK */
+  //res.json(authorizationURL).send();
+  res.redirect(process.env.AUTHORIZATION_URL);
 });
 
 //Firebase logic
