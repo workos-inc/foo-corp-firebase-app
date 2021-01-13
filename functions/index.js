@@ -14,6 +14,20 @@ const clientID = process.env.WORKOS_CLIENT_ID;
 //Firebase logic
 const firebaseApp = admin.initializeApp();
 
+app.get("/auth", (_req, res) => {
+  const domain = process.env.DOMAIN;
+  //Your redirectURI should be your client
+  const redirectURI = process.env.REDIRECT_URI;
+
+  const authorizationURL = workos.sso.getAuthorizationURL({
+    domain,
+    redirectURI,
+    clientID,
+  });
+
+  res.redirect(authorizationURL);
+});
+
 app.get("/callback", async (req, res) => {
   const { code } = req.query;
 
@@ -33,23 +47,11 @@ app.get("/callback", async (req, res) => {
     console.log(err.message);
     res.status(500).send("Error minting token.");
   }
-  res.redirect("/");
+  //further response logic; no strictly necessary here
+  //res.redirect("/");
 });
 
-app.get("/auth", (_req, res) => {
-  const domain = process.env.DOMAIN;
-  const redirectURI = process.env.REDIRECT_URI;
-
-  const authorizationURL = workos.sso.getAuthorizationURL({
-    domain,
-    redirectURI,
-    clientID,
-  });
-
-  res.redirect(authorizationURL);
-});
-
-// start the Express server
+// start server
 app.listen(port, () => {
   console.log(`server started at ${port}`);
 });
