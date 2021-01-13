@@ -7,33 +7,31 @@ dotenv.config();
 const app = express();
 const port = process.env.SERVER_PORT;
 
-//WorkOS Logic
+/* WorkOS Logic */
 const workos = new WorkOS(process.env.WORKOS_API_KEY);
-const clientID = process.env.WORKOS_CLIENT_ID;
+//const projectID = process.env.WORKOS_PROJECT_ID;
+//const domain = process.env.DOMAIN;
+/* Your redirectURI should be your client */
+//const redirectURI = process.env.REDIRECT_URI;
+
+app.get("/auth", (_req, res) => {
+/*const authorizationURL = workos.sso.getAuthorizationURL({
+    domain,
+    projectID,
+    redirectURI,
+  });*/
+res.redirect(process.env.AUTHORIZATION_URL);
+});
 
 //Firebase logic
 const firebaseApp = admin.initializeApp();
-
-app.get("/auth", (_req, res) => {
-  const domain = process.env.DOMAIN;
-  //Your redirectURI should be your client
-  const redirectURI = process.env.REDIRECT_URI;
-
-  const authorizationURL = workos.sso.getAuthorizationURL({
-    domain,
-    redirectURI,
-    clientID,
-  });
-
-  res.redirect(authorizationURL);
-});
 
 app.get("/callback", async (req, res) => {
   const { code } = req.query;
 
   const profile = await workos.sso.getProfile({
     code,
-    clientID,
+    projectID: process.env.WORKOS_PROJECT_ID,
   });
 
   try {
@@ -47,7 +45,7 @@ app.get("/callback", async (req, res) => {
     console.log(err.message);
     res.status(500).send("Error minting token.");
   }
-  //further response logic; no strictly necessary here
+  //further response logic; not strictly necessary here
   //res.redirect("/");
 });
 
