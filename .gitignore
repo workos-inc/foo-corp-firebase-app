@@ -1,9 +1,5 @@
 node_modules
-node_modules
-node_modules
-node_modules
-node_modules
-node_modules
-node_modules
-node_modules
+.env
+foo-corp-firebase-app-firebase-adminsdk-4zpqj-2f8d0bac5a.json
+.DS_Store
 
